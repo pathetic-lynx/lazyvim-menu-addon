@@ -70,9 +70,9 @@ describe("lazyvim-menu-addon", function()
       },
     }, { install_missing = true })
 
-    assert(h.has_key(" So")) -- telescope search options --> plugin adapter
-    assert(h.has_key(" GhS", 0)) -- gitsigns --> plugin adapter, decorating on_attach
     assert(h.has_key(" Gg")) -- lazygit in keymaps.lua --> keymaps adapter
     assert(h.has_key(" Cl", 0)) -- lsp info --> lsp adapter
+    assert(h.has_key(" GhS", 0)) -- gitsigns --> plugin adapter, decorating on_attach
+    assert(h.has_key(" So")) -- telescope search options --> plugin adapter
   end)
 end)

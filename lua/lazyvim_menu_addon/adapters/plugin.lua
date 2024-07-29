@@ -15,11 +15,11 @@ end
 
 ---@param change_cb fun(add_cb:fun())
 function M.inject(change_cb)
-  local Spec = require("lazy.core.plugin").Spec
-  local add_decorated = change_cb(Spec.add)
+  local Meta = require("lazy.core.meta")
+  local add_decorated = change_cb(Meta.add)
 
   ---@diagnostic disable-next-line: duplicate-set-field
-  Spec.add = function(_, plugin, results)
+  Meta.add = function(_, plugin, results)
     return add_decorated(_, plugin, results)
   end
 end

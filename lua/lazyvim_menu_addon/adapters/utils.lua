@@ -5,6 +5,9 @@ local M = {}
 ---@param fn fun(name:string)
 function M.on_load(name, fn)
   local Config = require("lazy.core.config")
+  -- if Config.plugins[name] then
+  --   print(Config.plugins[name])
+  -- end
   if Config.plugins[name] and Config.plugins[name]._.loaded then
     fn(name)
   else

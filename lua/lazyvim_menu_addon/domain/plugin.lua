@@ -50,8 +50,14 @@ end
 ---@param opts_to_change table|fun(_, opts:table)
 ---@param prop string
 function Opts.change(opts_to_change, prop)
+  local f = io.open("/home/ghost/debug.log", "a+")
+  f:write(prop .. "\n")
   local function modify(opts)
     if opts[prop] then
+      f:write("exists\n")
+      if type(opts[prop]) == "function" then
+        f:write("function\n")
+      end
       opts[prop] = type(opts[prop]) == "function" and Opts.inject_vim_keymap_set(opts[prop])
         or Opts.change_property(opts[prop])
     end

@@ -22,6 +22,14 @@ function M.inject(change_cb)
   Meta.add = function(_, plugin, results)
     return add_decorated(_, plugin, results)
   end
+
+  local Keys = require("lazy.core.handler.keys")
+  local _add_decorated = change_cb(Keys._add)
+
+  ---@diagnostic disable-next-line: duplicate-set-field
+  Keys._add = function(_, plugin, results)
+    return _add_decorated(_, plugin, results)
+  end
 end
 
 return M

@@ -35,6 +35,9 @@ function Opts.inject_vim_keymap_set(prop)
     ---@diagnostic disable-next-line: duplicate-set-field
     vim.keymap.set = function(mode, l, r, opts) -- intercept
       keymap_set_orig(mode, Utils.change_when_matched(l), r, opts)
+      local f = io.open("/home/ghost/debug.log", "a+")
+      f:write("executing decorator\n")
+      -- f:write(prop .. "\n")
     end
     prop_orig(...) -- Example: Calls the rhs of gitsigns: on_attach = function(buffer) ...code... end
     vim.keymap.set = keymap_set_orig -- release

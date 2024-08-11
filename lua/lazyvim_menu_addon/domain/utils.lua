@@ -13,12 +13,18 @@ end
 ---@return string
 function M.change_when_matched(key)
   local result = key
+  local f = io.open("/home/ghost/debug.log", "a+")
+  f:write("key: ".. key .."\n")
   for leader, new_leader in pairs(Config.options.leaders_to_change) do
+    f:write(" leader: ".. leader .."\n")
+    f:write(" new_leader: ".. new_leader .."\n")
     if key:find(leader, 1, true) then
+      f:write(" REPLACE: ".. new_leader .."\n")
       result = key:gsub(leader, new_leader)
       break
     end
   end
+  f:write("RESULT: ".. result .."\n")
   return result
 end
 

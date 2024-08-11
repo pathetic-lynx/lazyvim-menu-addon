@@ -28,6 +28,23 @@ describe("lazyvim-menu-addon", function()
     end
   end)
   it("integrates with LazyVim", function()
+
+    local orig_kmset = vim.keymap.set
+
+    ---@diagnostic disable-next-line: duplicate-set-field
+    vim.keymap.set = function(mode, l, r, opts) -- intercept
+      local f = io.open("/home/ghost/debug.log", "a+")
+      f:write("keymap.set called with key: " .. l .. "\n")
+      if l == "<leader>ghS" then
+        f:write("\n")
+        f:write("\n")
+        f:write(debug.traceback())
+        f:write("\n")
+        f:write("\n")
+      end
+      orig_kmset(mode, l, r, opts)
+    end
+
     local leaders_to_change = { c = "C", g = "G", s = "S" }
     local Lazy = require("lazy")
 
@@ -59,6 +76,7 @@ describe("lazyvim-menu-addon", function()
       {
         "LazyVim/LazyVim",
         import = "lazyvim.plugins",
+        version = "v9.9.1",
         opts = function(_, _) -- WORKAROUNDS...
           -- plugin adapter: Trigger gitsigns.
           gitsigns_on_attach()

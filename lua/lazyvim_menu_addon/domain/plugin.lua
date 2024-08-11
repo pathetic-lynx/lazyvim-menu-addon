@@ -21,6 +21,20 @@ function Opts.change_property(prop)
   return result
 end
 
+local function printTable(tbl, indent)
+  indent = indent or ""
+  local s = ""
+  for k, v in pairs(tbl) do
+    if type(v) == "table" then
+      s = s.. indent .. tostring(k) .. ":"
+      s = s..printTable(v, indent .. "  ")
+    else
+      s = s..indent .. tostring(k) .. ": " .. tostring(v)
+    end
+  end
+  return s
+end
+
 -- Property is a function executing vim.keymap.set
 --- @param prop function
 function Opts.inject_vim_keymap_set(prop)
@@ -34,9 +48,17 @@ function Opts.inject_vim_keymap_set(prop)
 
     ---@diagnostic disable-next-line: duplicate-set-field
     vim.keymap.set = function(mode, l, r, opts) -- intercept
-      keymap_set_orig(mode, Utils.change_when_matched(l), r, opts)
       local f = io.open("/home/ghost/debug.log", "a+")
+      local result = Utils.change_when_matched(l)
+      if result ~= l then
+        f:write("changing from " .. l .. " to " .. result .. "\n")
+      end
+      keymap_set_orig(mode, result, r, opts)
+      -- f:write(printTable(vim.keymap))
       f:write("executing decorator\n")
+      -- f:write(" r=" .. printTable(r) .. "\n")
+      f:write(" opts="..printTable(opts) .."\n")
+      f:write(" mode=" .. mode .. "\n")
       -- f:write(prop .. "\n")
     end
     prop_orig(...) -- Example: Calls the rhs of gitsigns: on_attach = function(buffer) ...code... end
